@@ -1,11 +1,26 @@
 {
-  "name": "ens_name_finder_backend",
-  "version": "1.0.0",
-  "description": "ETH name finder backend service",
-  "main": "index.js",
+  "name": "ens-name-finder-backend",
+  "version": "0.0.0",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prestart": "babel ./src --out-dir build",
+    "start": "node ./build/bin/www",
+    "dev": "nodemon --exec babel-node ./src/bin/www"
   },
-  "author": "",
-  "license": "ISC"
+  "dependencies": {
+    "@babel/cli": "^7.18.9",
+    "@babel/core": "^7.18.9",
+    "@babel/node": "^7.18.9",
+    "@babel/plugin-transform-runtime": "^7.18.9",
+    "@babel/preset-env": "^7.18.9",
+    "@babel/register": "^7.18.9",
+    "@babel/runtime": "^7.18.9",
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "dotenv": "^16.0.1",
+    "express": "~4.16.1",
+    "http-errors": "~1.6.3",
+    "morgan": "~1.9.1",
+    "nodemon": "^2.0.19"
+  }
 }
