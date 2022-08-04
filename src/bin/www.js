@@ -26,6 +26,7 @@ const normalizePort = val => {
  */
 const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
+console.log("Server started on port " + port)
 
 /**
  * Create HTTP server.
