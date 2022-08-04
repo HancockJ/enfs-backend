@@ -1,5 +1,6 @@
 import express from 'express';
 import { infuraKey } from '../config';
+const genex = require('genex');
 const {ethers} = require("ethers");
 const provider = new ethers.providers.JsonRpcProvider('https://mainnet.infura.io/v3/d163401424514af5bd48d03741865114');
 
@@ -18,7 +19,7 @@ indexRouter.get('/axiosTest', (req,res) => {
     })
 })
 
-indexRouter.get('/axiosGet', (req,res) => {
+indexRouter.get('/axiosGetTwo', (req,res) => {
     let name = "vitalik"
     provider.resolveName(name + ".eth").then(ens => {
         if(ens === null){
@@ -40,14 +41,28 @@ indexRouter.post('/axiosGetTwo', (req,res) => {
     })
 })
 
-indexRouter.post('/search', (req,res) => {
+indexRouter.post('/axiosPost', (req,res) => {
     let input = JSON.stringify(req.body)
     // console.log(input)
     let name = JSON.parse(input).name
-    // let name = input.name;
+    checkSingleName(name).then(response => {
+        res.send(response)
+    })
+})
+
+indexRouter.post('/search', (req,res) => {
+    let name = req.body.name
    checkSingleName(name).then(response => {
        res.send(String(response));
    })
+})
+
+indexRouter.post('/checkNames', (req,res) => {
+    let names = getMatches(req.body.regex);
+    checkNameList(names).then(response => {
+        console.log(Object.fromEntries(response))
+        res.send(Object.fromEntries(response))
+    })
 })
 
 async function f() {
@@ -69,16 +84,24 @@ async function checkSingleName(name) {
     }
 }
 
-async function checkName(name) {
-    provider.resolveName(name + ".eth").then(ens => {
-        if(ens === null){
-            console.log(name + ".eth is available!");
-            return(name + ".eth is available!");
-        }else{
-            console.log(name + ".eth is owned by " + ens);
-            return(name + ".eth is owned by " + ens)
+function getMatches(regexString) {
+    try {
+        const pattern = genex(regexString);
+        if(pattern.count() < 1000){
+            let matches = pattern.generate();
+            return matches.filter(word => /^[A-Za-z\d]*$/.test(word));
         }
-    })
+    } catch (error) {
+        return([regexString])
+    }
+}
+
+async function checkNameList(nameList) {
+    const nameMap = new Map();
+    for(let i in nameList){
+        nameMap.set(nameList[i], await provider.resolveName(nameList[i] + ".eth"));
+    }
+    return nameMap;
 }
 
 export default indexRouter;
