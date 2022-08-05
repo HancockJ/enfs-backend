@@ -1,7 +1,9 @@
 const axios = require("axios");
+const { ENS } = require('@ensdomains/ensjs')
 const {ethers} = require("ethers");
 const genex = require("genex");
 const provider = new ethers.providers.JsonRpcProvider('https://mainnet.infura.io/v3/d163401424514af5bd48d03741865114');
+const ENSInstance = new ENS()
 
 
 async function f() {
@@ -37,7 +39,7 @@ async function f() {
 
 
 
-axios.post('http://localhost:3000/v1/checkNames', {regex: "jack\\d"})
+axios.post('http://localhost:3000/v1/checkNames', {regex: "jack\\d\\d"})
     .then(response => {
         console.log(response.data);
         console.log("SUCCESS")
@@ -48,16 +50,20 @@ axios.post('http://localhost:3000/v1/checkNames', {regex: "jack\\d"})
     })
 
 
-
-
 // async function getResolver(name) {
-//     return await provider.getResolver(name + ".eth");
+//    let ownerInfo = await ENSInstance.getOwner(name + ".eth");
+//    if(ownerInfo != null){
+//        return ownerInfo.owner;
+//    }else{
+//        return null
+//    }
 // }
 // async function getAddress(name) {
 //     return await provider.resolveName(name + ".eth");
 // }
 //
-// function test(name){
+// async function test(name){
+//     await ENSInstance.setProvider(provider)
 //     getResolver(name).then(response => {
 //         console.log(response);
 //     })
