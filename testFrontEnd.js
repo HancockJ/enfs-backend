@@ -39,7 +39,7 @@ async function f() {
 
 
 
-axios.post('http://localhost:3000/v1/checkNames', {regex: "jack\\d\\d"})
+axios.post('http://localhost:3000/v1/checkNames', {regex: "jack\\d"})
     .then(response => {
         console.log(response.data);
         console.log("SUCCESS")
