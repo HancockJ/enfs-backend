@@ -1,0 +1,37 @@
+{
+  "name": "ens-name-finder-backend",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "prestart": "babel ./src --out-dir build",
+    "start": "node ./build/bin/www",
+    "dev": "nodemon --exec babel-node ./src/bin/www"
+  },
+  "dependencies": {
+    "@babel/cli": "^7.18.9",
+    "@babel/core": "^7.18.9",
+    "@babel/node": "^7.18.9",
+    "@babel/plugin-transform-runtime": "^7.18.9",
+    "@babel/preset-env": "^7.18.9",
+    "@babel/register": "^7.18.9",
+    "@babel/runtime": "^7.18.9",
+    "@ensdomains/ensjs": "^3.0.0-alpha.13",
+    "axios": "^0.27.2",
+    "babel-node": "^0.0.1-security",
+    "cookie-parser": "~1.4.4",
+    "cors": "^2.8.5",
+    "debug": "~2.6.9",
+    "dotenv": "^16.0.1",
+    "ethers": "^5.6.9",
+    "express": "~4.16.1",
+    "genex": "^1.1.0",
+    "http-errors": "~1.6.3",
+    "morgan": "~1.9.1",
+    "node": "^16.17.0",
+    "nodemon": "^2.0.19",
+    "package.json": "^2.0.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0"
+  }
+}
