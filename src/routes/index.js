@@ -32,16 +32,21 @@ function getMatches(regexString) {
 }
 
 async function checkNameList(nameList) {
-    await ENSInstance.setProvider(provider)
+    let startTime = performance.now()
     const nameMap = new Map();
-    for(let i in nameList){
-        let ownerInfo = await ENSInstance.getOwner(nameList[i] + ".eth");
-        if(ownerInfo != null){
-            nameMap.set(nameList[i], ownerInfo.owner);
+    await ENSInstance.setProvider(provider)
+    const promiseMap = nameList.map(name => ENSInstance.getOwner(name + ".eth"));
+    let values = await Promise.all(promiseMap)
+    for(let i in values){
+        if(values[i] != null){
+            nameMap.set(nameList[i], values[i].owner);
         }else{
             nameMap.set(nameList[i], null);
         }
     }
+    let endTime = performance.now();
+    nameMap.set("TIME TAKEN", endTime - startTime);
+    console.log(`Checking the name list took ${endTime - startTime} milliseconds`)
     return nameMap;
 }
 
