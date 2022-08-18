@@ -32,7 +32,6 @@ function getMatches(regexString) {
 }
 
 async function checkNameList(nameList) {
-    let startTime = performance.now()
     const nameMap = new Map();
     await ENSInstance.setProvider(provider)
     const promiseMap = nameList.map(name => ENSInstance.getOwner(name + ".eth"));
@@ -44,9 +43,6 @@ async function checkNameList(nameList) {
             nameMap.set(nameList[i], null);
         }
     }
-    let endTime = performance.now();
-    nameMap.set("TIME TAKEN", endTime - startTime);
-    console.log(`Checking the name list took ${endTime - startTime} milliseconds`)
     return nameMap;
 }
 
