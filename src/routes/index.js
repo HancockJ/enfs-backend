@@ -14,7 +14,10 @@ indexRouter.post('/checkNames', (req,res) => {
     })
 })
 
-
-
+// ROUTES LIST:
+// NameQuery - Receives regex string, Returns list of names & their info
+// PostDB - Posts DB info
+// PullDB - Sends a list of names, Receives names and their info
+// UpdateDB - Pulls updated block info from Infura
 
 export default indexRouter;
