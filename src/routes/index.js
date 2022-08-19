@@ -13,7 +13,7 @@ indexRouter.post('/checkNames', (req,res) => {
         res.send(Object.fromEntries(response))
     })
 })
-
+// TODO: Change checkName to nameQuery
 // ROUTES LIST:
 // NameQuery - Receives regex string, Returns list of names & their info
 // PostDB - Posts DB info
