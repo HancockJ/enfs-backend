@@ -1,9 +1,5 @@
 import express from 'express';
-const genex = require('genex');
-const {ethers} = require("ethers");
-const provider = new ethers.providers.JsonRpcProvider('https://mainnet.infura.io/v3/d163401424514af5bd48d03741865114');
-const { ENS } = require('@ensdomains/ensjs')
-const ENSInstance = new ENS()
+import nameQuery from '../components/nameQuery'
 
 const indexRouter = express.Router();
 
@@ -12,44 +8,16 @@ indexRouter.get('/', (req,res) => {
 })
 
 indexRouter.post('/checkNames', (req,res) => {
-    let names = getMatches(req.body.regex);
-    checkNameList(names).then(response => {
+    nameQuery(req.body.regex).then(response => {
         console.log(Object.fromEntries(response))
         res.send(Object.fromEntries(response))
     })
 })
-
-function getMatches(regexString) {
-    try {
-        const pattern = genex(regexString);
-        if(pattern.count() < 1000){
-            let matches = pattern.generate();
-            return matches.filter(word => /^[A-Za-z\d]*$/.test(word));
-        }
-    } catch (error) {
-        return([regexString])
-    }
-}
-
-async function checkNameList(nameList) {
-    let startTime = performance.now()
-    const nameMap = new Map();
-    await ENSInstance.setProvider(provider)
-    const promiseMap = nameList.map(name => ENSInstance.getOwner(name + ".eth"));
-    let values = await Promise.all(promiseMap)
-    for(let i in values){
-        if(values[i] != null){
-            nameMap.set(nameList[i], values[i].owner);
-        }else{
-            nameMap.set(nameList[i], null);
-        }
-    }
-    let endTime = performance.now();
-    nameMap.set("TIME TAKEN", endTime - startTime);
-    console.log(`Checking the name list took ${endTime - startTime} milliseconds`)
-    return nameMap;
-}
-
-
+// TODO: Change checkName to nameQuery
+// ROUTES LIST:
+// NameQuery - Receives regex string, Returns list of names & their info
+// PostDB - Posts DB info
+// PullDB - Sends a list of names, Receives names and their info
+// UpdateDB - Pulls updated block info from Infura
 
 export default indexRouter;
