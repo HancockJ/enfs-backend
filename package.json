@@ -29,7 +29,8 @@
     "morgan": "~1.9.1",
     "node": "^16.17.0",
     "nodemon": "^2.0.19",
-    "package.json": "^2.0.1"
+    "package.json": "^2.0.1",
+    "pg": "^8.8.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0"

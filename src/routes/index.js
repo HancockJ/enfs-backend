@@ -1,6 +1,8 @@
 import express from 'express';
 import nameQuery from '../components/nameQuery'
 
+
+
 const indexRouter = express.Router();
 
 indexRouter.get('/', (req,res) => {
@@ -9,8 +11,8 @@ indexRouter.get('/', (req,res) => {
 
 indexRouter.post('/checkNames', (req,res) => {
     nameQuery(req.body.regex).then(response => {
-        console.log(Object.fromEntries(response))
-        res.send(Object.fromEntries(response))
+        console.log("response",response)
+        res.send(response)
     })
 })
 // TODO: Change checkName to nameQuery
