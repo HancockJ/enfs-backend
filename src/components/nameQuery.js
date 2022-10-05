@@ -36,7 +36,7 @@ async function checkNameList(nameList) {
 }
 async function checkDB(regexString) {
 
-    const pool = new Pool(db_conn.debug.connection_uri)
+    const pool = new Pool(db_conn.production.connection_uri)
     if (pool) {
     }
     const text = 'SELECT * FROM name_registered WHERE name ~ $1'
