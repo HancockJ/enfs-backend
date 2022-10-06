@@ -15,7 +15,7 @@ function getNameList(regexString) {
 
         }
     } catch (error) {
-        return ([regexString])
+        return [regexString]
     }
 }
 
@@ -36,19 +36,20 @@ async function checkNameList(nameList) {
 }
 async function checkDB(regexString) {
 
-    const pool = new Pool(db_conn.production.connection_uri)
+    const pool = new Pool(db_conn.debug.connection_uri)
     if (pool) {
     }
     const text = 'SELECT * FROM name_registered WHERE name ~ $1'
     const values = [regexString]
-    return pool.query(text, values).then(res => {
+    return pool.query(text, values).then((res) => {
         for (const element of res.rows) {
             console.log(element.name)
         }
         pool.end()
+        console.log(res.rows)
         return res.rows
     })
-        .catch(e => console.error(e.stack))
+        .catch(e => {console.error(e.stack);return [regexString]})
 }
 module.exports = function (regexString) {
     const names = getNameList(regexString) //getting generated list from regex string
@@ -65,7 +66,6 @@ module.exports = function (regexString) {
             }
             else return null
         }).filter(n => n)
-        
         const checked_names = await checkNameList(unchecked_names) //check those names that are left. generated_names-db_names
         for(let name of checked_names){
             obj[name[0]] = name[1]
