@@ -3,7 +3,7 @@ const provider = new ethers.providers.JsonRpcProvider('https://mainnet.infura.io
 const { ENS } = require('@ensdomains/ensjs')
 const ENSInstance = new ENS()
 const genex = require("genex");
-const { Pool, Client } = require('pg')
+const { Pool } = require('pg')
 import db_conn from '../config.js'
 function getNameList(regexString) {
     try {

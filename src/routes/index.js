@@ -1,8 +1,6 @@
 import express from 'express';
 import nameQuery from '../components/nameQuery'
 
-
-
 const indexRouter = express.Router();
 
 indexRouter.get('/', (req,res) => {
