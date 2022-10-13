@@ -1,18 +1,15 @@
 const ethers = require('ethers');
-const ensABI = require('/Users/jackhancock/Desktop/Coding/Crypto/temp/listen-to-ens/ens.json');
-const baseRegABI = require('../baseRegistrar.json')
-const regABI = require('../realReg.json')
+const controllerABI = require('../registrarControllerABI.json');
+const baseRegABI = require('../baseRegistrarABI.json')
 
 
 // const {Pool} = require("pg");
 // const db_conn = require("../config");
-const ensAddress = "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e";
-const ensRegistrar = "0x283Af0B28c62C092C9727F1Ee09c02CA627EB7F5";
-const baseRegistrar = "0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85";
+const registrarControllerAddress = "0x283Af0B28c62C092C9727F1Ee09c02CA627EB7F5";
+const baseRegistrarAddress = "0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85";
 const provider = new ethers.providers.WebSocketProvider('wss://mainnet.infura.io/ws/v3/d163401424514af5bd48d03741865114');
-const contract = new ethers.Contract(ensAddress, ensABI, provider);
-const regContract = new ethers.Contract(ensRegistrar, baseRegABI, provider);
-const baseContract = new ethers.Contract(baseRegistrar, regABI, provider);
+const baseContract = new ethers.Contract(baseRegistrarAddress, baseRegABI, provider);
+const controlContract = new ethers.Contract(registrarControllerAddress, controllerABI, provider);
 // const { Pool } = require('pg')
 // import db_conn from '../config.js'
 
@@ -43,17 +40,7 @@ async function test(info) {
 //     });
 // }
 
-async function newTest() {
-    baseContract.on("NameRegistered", (tokenID, owner, expires) =>{
-        let info = {
-            id: tokenID,
-            owner: owner,
-            expires: expires
-        };
-        console.log('----------------------')
-        console.log("Name Registered", info)
-        // console.log(JSON.stringify(info, null, 4))
-    } )
+async function baseMonitor() {
     baseContract.on("Transfer", (from, to, tokenID) =>{
         let info = {
             from: from,
@@ -62,13 +49,13 @@ async function newTest() {
         };
         console.log('----------------------')
         console.log("Transfer", info)
-        // console.log(JSON.stringify(info, null, 4))
     } )
 }
 
 
-async function registrar() {
-    regContract.on("NameRegistered", (name, label, owner, cost, expires) =>{
+async function controlMonitor() {
+    // event NameRegistered(string name, bytes32 indexed label, address indexed owner, uint cost, uint expires);
+    controlContract.on("NameRegistered", (name, label, owner, cost, expires) =>{
         let info = {
             name: name,
             owner: owner,
@@ -78,39 +65,17 @@ async function registrar() {
         };
         console.log('----------------------')
         console.log("Name Registered", info)
-        // console.log(JSON.stringify(info, null, 4))
     } )
-}
-
-async function main() {
-    contract.on("NewOwner", (node, label, owner) =>{
+    // event NameRenewed(string name, bytes32 indexed label, uint cost, uint expires);
+    controlContract.on("NameRenewed", (name, label, cost, expires) =>{
         let info = {
-            // node: node,
-            owner: owner,
+            name: name,
             label: label,
+            cost: cost,
+            expires: expires
         };
         console.log('----------------------')
-        console.log("New Owner", info)
-        // test(info)
-        // console.log(JSON.stringify(info, null, 4))
-    } )
-    contract.on("Transfer", (node, owner, event) =>{
-        console.log("Transfer");
-        let info = {
-            node: node,
-            owner: owner,
-        };
-        console.log("Transfer", info)
-        // console.log(JSON.stringify(info, null, 4))
-    } )
-    contract.on("NewTTL", (node, ttl, event) =>{
-        console.log("NewTTL");
-        let info = {
-            node: node,
-            owner: ttl,
-        };
-        console.log("New TTL", info)
-        // console.log(JSON.stringify(info, null, 4))
+        console.log("Name Renewed", info)
     } )
 }
 
@@ -129,8 +94,7 @@ async function main() {
 //
 // insertInDatabase();
 
-console.log("Starting Updater")
-// main().then();
-// registrar().then();
-newTest().then();
+console.log("Starting Event Monitors")
+baseMonitor().then()
+controlMonitor().then()
 
