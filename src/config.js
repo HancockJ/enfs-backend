@@ -6,8 +6,8 @@ const db_conn = {
         "connection_uri":{
             "user": "postgres",
             "host": "localhost",
-            "database": "ens_database",
-            "password": "",
+            "database": "ens_db",
+            "password": "enfs_root",
             "port": 5432
           }
     },
@@ -16,7 +16,7 @@ const db_conn = {
   "user": "postgres",
   "host": "localhost",
   "database": "ens_db",
-  "password": "root",
+  "password": "enfs_root",
   "port": 5432
 }
     }

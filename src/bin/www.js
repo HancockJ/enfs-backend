@@ -27,8 +27,8 @@ const normalizePort = val => {
  * Create HTTPS Server
  */
 const https = require('https');
-const privateKey  = fs.readFileSync('/root/enfs/sslcert/server.key', 'utf8');
-const certificate = fs.readFileSync('/root/enfs/sslcert/server.cert', 'utf8');
+const privateKey  = fs.readFileSync('/etc/letsencrypt/live/backend.enfs.domains/privkey.pem', 'utf8');
+const certificate = fs.readFileSync('/etc/letsencrypt/live/backend.enfs.domains/fullchain.pem', 'utf8');
 const credentials = {key: privateKey, cert: certificate};
 
 const server = https.createServer(credentials, app);
