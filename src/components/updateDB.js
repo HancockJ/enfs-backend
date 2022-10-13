@@ -4,7 +4,27 @@ const baseRegABI = require('../baseRegistrarABI.json')
 
 
 const {Pool} = require("pg");
-const db_conn = require("../config");
+// const db_conn = require("../config");
+const db_conn = {
+    "debug":{
+        "connection_uri":{
+            "user": "postgres",
+            "host": "localhost",
+            "database": "ens_database",
+            "password": "enfs-root-temp",
+            "port": 5432
+        }
+    },
+    "production":{
+        "connection_uri":{
+            "user": "postgres",
+            "host": "localhost",
+            "database": "ens_db",
+            "password": "enfs-root-temp",
+            "port": 5432
+        }
+    }
+};
 const registrarControllerAddress = "0x283Af0B28c62C092C9727F1Ee09c02CA627EB7F5";
 const baseRegistrarAddress = "0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85";
 const provider = new ethers.providers.WebSocketProvider('wss://mainnet.infura.io/ws/v3/d163401424514af5bd48d03741865114');
