@@ -6,6 +6,7 @@ import debug from 'debug';
 import http from 'http';
 import app from '../app';
 require('dotenv').config();
+const fs = require('fs');
 /**
  * Normalize a port into a number, string, or false.
  */
@@ -23,16 +24,26 @@ const normalizePort = val => {
 };
 
 /**
+ * Create HTTPS Server
+ */
+const https = require('https');
+const privateKey  = fs.readFileSync('/etc/letsencrypt/live/backend.enfs.domains/privkey.pem', 'utf8');
+const certificate = fs.readFileSync('/etc/letsencrypt/live/backend.enfs.domains/fullchain.pem', 'utf8');
+const credentials = {key: privateKey, cert: certificate};
+
+const server = https.createServer(credentials, app);
+
+/**
  * Get port from environment and store in Express.
  */
 const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
-console.log("Server started on port " + port)
+console.log("HTTPS server started on port " + port)
 
 /**
  * Create HTTP server.
  */
-const server = http.createServer(app);
+// const server = http.createServer(app);
 
 /**
  * Event listener for HTTP server "error" event.
@@ -71,3 +82,6 @@ const onListening = () => {
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
+// httpsServer.listen(port + 1);
+// httpsServer.on('error', onError);
+// httpsServer.on('listening', onListening);
