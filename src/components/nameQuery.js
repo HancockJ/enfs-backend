@@ -66,7 +66,7 @@ module.exports = function (regexString) {
             }
             else return null
         }).filter(n => n)
-        if unchecked_names.length() > 1000 {return obj} //if there are too many names to check, return what we have
+        if (unchecked_names.length() > 1000) {return obj} //if there are too many names to check, return what we have
         const checked_names = await checkNameList(unchecked_names) //check those names that are left. generated_names-db_names
         for(let name of checked_names){
             obj[name[0]] = name[1]
