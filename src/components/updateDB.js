@@ -48,13 +48,13 @@ const controlContract = new ethers.Contract(registrarControllerAddress, controll
 //     console.log(JSON.stringify(info, null, 4))
 // }
 
-function insertInDatabase() {
+function insertInDatabase(values) {
     const pool = new Pool(db_conn.production.connection_uri)
     if (pool) {
     }
     console.log("--- Trying to insert value")
-    const text = 'INSERT INTO name_registered ("cost, expires, label, name, owner, node_hash") VALUES (9999999999,9999999999,0x99999999999999dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae,"testENFStestENFS123000",0x000000000000000000000000000000d1c33cfd8ed6f04690a0bcc88a93fc4ae,0x111111111111111111111111111111d1c33cfd8ed6f04690a0bcc88a93fc4ae) ON CONFLICT DO NOTHING'
-    pool.query(text, (err, res) => {
+    const text = 'INSERT INTO name_registered(cost, expires, label, name, owner, node_hash) VALUES ($1, $2, $3, $4, $5, $6) ON CONFLICT DO NOTHING'
+    pool.query(text, values, (err, res) => {
         console.log(err)
         console.log(res)
     });
@@ -76,15 +76,10 @@ async function baseMonitor() {
 async function controlMonitor() {
     // event NameRegistered(string name, bytes32 indexed label, address indexed owner, uint cost, uint expires);
     controlContract.on("NameRegistered", (name, label, owner, cost, expires) =>{
-        let info = {
-            name: name,
-            owner: owner,
-            label: label,
-            cost: cost,
-            expires: expires
-        };
+        let entry = [cost, expires, label, name, owner, "0x9999999999999999999999999999999999999999999999999999999999999999"]
         console.log('----------------------')
-        console.log("Name Registered", info)
+        console.log("Name Registered", entry)
+        insertInDatabase(entry)
     } )
     // event NameRenewed(string name, bytes32 indexed label, uint cost, uint expires);
     controlContract.on("NameRenewed", (name, label, cost, expires) =>{
@@ -102,10 +97,10 @@ async function controlMonitor() {
 // let testInfo = {
 //     cost: 9999999999,
 //     expires: 9999999999,
-//     node: 0x99999999999999dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae,
+//     label: 0x111111111111111111111111111111d1c33cfd8ed6f04690a0bcc88a93fc4ae,
 //     name: "testENFStestENFS123000",
 //     owner: 0x000000000000000000000000000000d1c33cfd8ed6f04690a0bcc88a93fc4ae,
-//     label: 0x111111111111111111111111111111d1c33cfd8ed6f04690a0bcc88a93fc4ae,
+//     node: 0x99999999999999dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae,
 // };
 
 // let testInfo = [9999999999,9999999999,0x99999999999999dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae,
@@ -116,6 +111,6 @@ async function controlMonitor() {
 
 // console.log("Starting Event Monitors")
 // baseMonitor().then()
-// controlMonitor().then()
-insertInDatabase();
+controlMonitor().then()
+// insertInDatabase(testInfo);
 
