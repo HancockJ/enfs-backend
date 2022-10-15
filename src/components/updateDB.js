@@ -52,11 +52,13 @@ function insertInDatabase(values) {
     const pool = new Pool(db_conn.production.connection_uri)
     if (pool) {
     }
-    console.log("--- Trying to insert value")
     const text = 'INSERT INTO name_registered(cost, expires, label, name, owner, node_hash) VALUES ($1, $2, $3, $4, $5, $6) ON CONFLICT DO NOTHING'
     pool.query(text, values, (err, res) => {
-        console.log(err)
-        console.log(res)
+       if(err){
+           console.log(err)
+       } else{
+           console.log(res)
+       }
     });
 }
 
@@ -110,7 +112,7 @@ async function controlMonitor() {
 // insertInDatabase();
 
 // console.log("Starting Event Monitors")
-// baseMonitor().then()
+baseMonitor().then()
 controlMonitor().then()
 // insertInDatabase(testInfo);
 
