@@ -58,7 +58,7 @@ function insertInDatabase(values) {
        if(err){
            console.log(err)
        } else{
-           console.log(res.rowCount)
+           console.log("Inserted " + res.rowCount + " row(s)")
        }
     });
 }
@@ -72,7 +72,7 @@ function updateExpiration(values) {
         if(err){
             console.log(err)
         } else{
-            console.log(res.rowCount)
+            console.log("Updated " + res.rowCount + " row(s)")
         }
     });
 }
@@ -86,7 +86,7 @@ function transferName(values) {
         if(err){
             console.log(err)
         } else{
-            console.log(res.rowCount)
+            console.log("Updated " + res.rowCount + " row(s)")
         }
     });
 }
@@ -155,4 +155,5 @@ async function controlMonitor() {
 baseMonitor().then()
 controlMonitor().then()
 // insertInDatabase(testInfo);
+//updateExpiration(['42','0x99999999999999dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae'])
 
