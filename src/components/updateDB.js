@@ -4,6 +4,7 @@ const baseRegABI = require('../baseRegistrarABI.json')
 
 
 const {Pool} = require("pg");
+const {BigNumber} = require("ethers");
 // const db_conn = require("../config");
 const db_conn = {
     "debug":{
@@ -57,7 +58,7 @@ function insertInDatabase(values) {
        if(err){
            console.log(err)
        } else{
-           console.log(res)
+           console.log(res.rowCount)
        }
     });
 }
@@ -71,7 +72,7 @@ function updateExpiration(values) {
         if(err){
             console.log(err)
         } else{
-            console.log(res)
+            console.log(res.rowCount)
         }
     });
 }
@@ -85,16 +86,22 @@ function transferName(values) {
         if(err){
             console.log(err)
         } else{
-            console.log(res)
+            console.log(res.rowCount)
         }
     });
 }
 
 async function baseMonitor() {
     baseContract.on("Transfer", (from, to, tokenID) =>{
-        let info = [to, tokenID];
+        const label = BigNumber.from(tokenID).toHexString()
+        let details = {
+            from: from,
+            to: to,
+            id: label
+        };
+        let info = [to, label];
         console.log('----------------------')
-        console.log("Transfer", info)
+        console.log("Transfer", details)
         transferName(info)
     } )
 }
@@ -103,16 +110,28 @@ async function baseMonitor() {
 async function controlMonitor() {
     // event NameRegistered(string name, bytes32 indexed label, address indexed owner, uint cost, uint expires);
     controlContract.on("NameRegistered", (name, label, owner, cost, expires) =>{
+        let details = {
+            name: name,
+            label: label,
+            cost: cost,
+            expires: expires
+        };
         let entry = [cost, expires, label, name, owner, "0x9999999999999999999999999999999999999999999999999999999999999999"]
         console.log('----------------------')
-        console.log("Name Registered", entry)
+        console.log("Name Registered", details)
         insertInDatabase(entry)
     } )
     // event NameRenewed(string name, bytes32 indexed label, uint cost, uint expires);
     controlContract.on("NameRenewed", (name, label, cost, expires) =>{
+        let details = {
+            name: name,
+            label: label,
+            cost: cost,
+            expires: expires
+        };
         let info = [expires, label];
         console.log('----------------------')
-        console.log("Name Renewed", info)
+        console.log("Name Renewed", details)
         updateExpiration(info)
     } )
 }
