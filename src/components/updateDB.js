@@ -52,8 +52,8 @@ function insertInDatabase(values) {
     const pool = new Pool(db_conn.production.connection_uri)
     if (pool) {
     }
-    const text = 'INSERT INTO name_registered(cost, expires, label, name, owner, node_hash) VALUES ($1, $2, $3, $4, $5, $6) ON CONFLICT DO NOTHING'
-    pool.query(text, values, (err, res) => {
+    const query = 'INSERT INTO name_registered(cost, expires, label, name, owner, node_hash) VALUES ($1, $2, $3, $4, $5, $6) ON CONFLICT DO NOTHING'
+    pool.query(query, values, (err, res) => {
        if(err){
            console.log(err)
        } else{
@@ -62,15 +62,40 @@ function insertInDatabase(values) {
     });
 }
 
+function updateExpiration(values) {
+    const pool = new Pool(db_conn.production.connection_uri)
+    if (pool) {
+    }
+    const query = 'UPDATE name_registered SET expires = $1 WHERE label = $2'
+    pool.query(query, values, (err, res) => {
+        if(err){
+            console.log(err)
+        } else{
+            console.log(res)
+        }
+    });
+}
+
+function transferName(values) {
+    const pool = new Pool(db_conn.production.connection_uri)
+    if (pool) {
+    }
+    const query = 'UPDATE name_registered SET owner = $1 WHERE label = $2'
+    pool.query(query, values, (err, res) => {
+        if(err){
+            console.log(err)
+        } else{
+            console.log(res)
+        }
+    });
+}
+
 async function baseMonitor() {
     baseContract.on("Transfer", (from, to, tokenID) =>{
-        let info = {
-            from: from,
-            to: to,
-            id: tokenID
-        };
+        let info = [to, tokenID];
         console.log('----------------------')
         console.log("Transfer", info)
+        transferName(info)
     } )
 }
 
@@ -85,14 +110,10 @@ async function controlMonitor() {
     } )
     // event NameRenewed(string name, bytes32 indexed label, uint cost, uint expires);
     controlContract.on("NameRenewed", (name, label, cost, expires) =>{
-        let info = {
-            name: name,
-            label: label,
-            cost: cost,
-            expires: expires
-        };
+        let info = [expires, label];
         console.log('----------------------')
         console.log("Name Renewed", info)
+        updateExpiration(info)
     } )
 }
 
