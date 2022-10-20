@@ -93,16 +93,19 @@ function transferName(values) {
 
 async function baseMonitor() {
     baseContract.on("Transfer", (from, to, tokenID) =>{
-        const label = BigNumber.from(tokenID).toHexString()
-        let details = {
-            from: from,
-            to: to,
-            id: label
-        };
-        let info = [to, label];
-        console.log('----------------------')
-        console.log("Transfer", details)
-        transferName(info)
+        // These are the 0 address and ENS registrar address. There will be a Name Registered event capturing.
+        if(from !== '0x0000000000000000000000000000000000000000' && from !== '0x283Af0B28c62C092C9727F1Ee09c02CA627EB7F5'){
+            const label = BigNumber.from(tokenID).toHexString()
+            let details = {
+                from: from,
+                to: to,
+                id: label
+            };
+            let info = [to, label];
+            console.log('----------------------')
+            console.log("Transfer", details)
+            transferName(info)
+        }
     } )
 }
 
@@ -112,6 +115,7 @@ async function controlMonitor() {
     controlContract.on("NameRegistered", (name, label, owner, cost, expires) =>{
         let details = {
             name: name,
+            owner: owner,
             label: label,
             cost: cost,
             expires: expires
