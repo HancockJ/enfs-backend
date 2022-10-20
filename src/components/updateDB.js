@@ -58,7 +58,7 @@ function insertInDatabase(values) {
        if(err){
            console.log(err)
        } else{
-           console.log("Inserted " + res.rowCount + " row(s)")
+           console.log("Inserted " + res.rowCount + " row(s) for label: " + values[2])
        }
     });
 }
@@ -72,7 +72,7 @@ function updateExpiration(values) {
         if(err){
             console.log(err)
         } else{
-            console.log("Updated " + res.rowCount + " row(s)")
+            console.log("Updated " + res.rowCount + " row(s) for label " + values[1])
         }
     });
 }
@@ -86,7 +86,7 @@ function transferName(values) {
         if(err){
             console.log(err)
         } else{
-            console.log("Updated " + res.rowCount + " row(s)")
+            console.log("Updated " + res.rowCount + " row(s) for label " + values[1])
         }
     });
 }
