@@ -12,7 +12,6 @@ function getNameList(regexString) {
             let matches = pattern.generate();
             console.log("matches", matches)
             return matches.filter(word => /^[A-Za-z\d]*$/.test(word));
-
         }
     } catch (error) {
         return [regexString]
@@ -43,10 +42,10 @@ async function checkDB(regexString) {
     const values = [regexString]
     return pool.query(text, values).then((res) => {
         for (const element of res.rows) {
-            console.log(element.name)
+            // console.log(element.name)
         }
         pool.end()
-        console.log(res.rows)
+        // console.log(res.rows)
         return res.rows
     })
         .catch(e => {console.error(e.stack);return [regexString]})
