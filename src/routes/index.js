@@ -9,7 +9,7 @@ indexRouter.get('/', (req,res) => {
 
 indexRouter.post('/checkNames', (req,res) => {
     nameQuery(req.body.regex).then(response => {
-        console.log("response",response)
+        // console.log("response",response)
         res.send(response)
     })
 })
