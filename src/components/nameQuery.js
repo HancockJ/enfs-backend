@@ -11,7 +11,7 @@ function getNameList(regexString) {
         if (pattern.count() < 1000) {
             let matches = pattern.generate();
             console.log("matches", matches)
-            return matches.filter(word => /^[A-Za-z\d]*$/.test(word));
+            return matches.filter(word => /^[a-z\d]*$/.test(word));
         }
     } catch (error) {
         return [regexString]
