@@ -10,8 +10,9 @@ function getNameList(regexString) {
         const pattern = genex(regexString);
         if (pattern.count() < 1000) {
             let matches = pattern.generate();
+            matches = matches.filter(word => /^[a-z\d]*$/.test(word));
             console.log("matches", matches)
-            return matches.filter(word => /^[a-z\d]*$/.test(word));
+            return matches;
         }
     } catch (error) {
         return [regexString]
