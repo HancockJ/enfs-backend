@@ -1,4 +1,5 @@
-# Backend Service for finding ETH domain names
-## Built with Express
-## Start the development server with 'npm run dev'
+# Backend for the Ethereum Name Finding Service
+## General info on how the application works
+Located on the frontend repository:
+https://github.com/HancockJ/enfs-frontend
 
